@@ -78,6 +78,8 @@ If you want to run it on a real iPhone, select your Apple ID team under
 The rules in `firestore.rules` make sure that a logged in user can only read and write
 documents under `users/{their uid}/tasks`. Everything else is denied.
 
+Or deploy them with the Firebase CLI: `firebase deploy --only firestore:rules`
+
 ## Troubleshooting
 
 - **"Missing or insufficient permissions"**: the Firestore rules were not published, or you are not logged in.
