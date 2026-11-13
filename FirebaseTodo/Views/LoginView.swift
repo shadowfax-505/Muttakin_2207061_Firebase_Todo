@@ -56,27 +56,11 @@ struct LoginView: View {
                 }
                 .font(.footnote)
 
-                Button("Fill Demo Credentials") {
-                    email = "demo@example.com"
-                    password = "demopassword123"
-                }
-                .font(.footnote)
-                .padding(.top, 4)
-
                 Spacer()
             }
             .padding()
             .padding(.top, 40)
-            .onAppear {
-                authVM.errorMessage = nil
-                if ProcessInfo.processInfo.arguments.contains("--demo-login") {
-                    email = "demo@example.com"
-                    password = "demopassword123"
-                    Task {
-                        await authVM.signIn(email: email, password: password)
-                    }
-                }
-            }
+            .onAppear { authVM.errorMessage = nil }
         }
     }
 }
