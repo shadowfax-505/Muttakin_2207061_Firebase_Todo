@@ -3,7 +3,11 @@
 A todo list app for iOS built with **SwiftUI**, **Firebase Authentication** and **Cloud Firestore**.
 Every user signs in with email and password and gets their own private list of tasks that syncs in real time.
 
-> Mobile Computing Lab Assignment
+> Mobile Computing Lab Assignment · Muttakin · Roll 2207061
+
+| Login | My Tasks |
+| :---: | :---: |
+| <img src="docs/screenshots/login.png" width="260" alt="Login screen"> | <img src="docs/screenshots/task-list.png" width="260" alt="Task list screen"> |
 
 | | |
 |---|---|
