@@ -43,36 +43,29 @@ Each task has a **title**, a **description**, a **done** flag and a **created da
 The app follows **MVVM**. Views only display state and forward user actions. View models talk to Firebase and publish the results back to the views.
 
 ```mermaid
-flowchart LR
-    subgraph App["iOS App (SwiftUI)"]
-        direction TB
-        subgraph Views
-            CV[ContentView]
-            LV[LoginView]
-            SV[SignUpView]
-            TLV[TaskListView]
-            TFV[TaskFormView]
-        end
-        subgraph ViewModels
-            AVM[AuthViewModel]
-            TVM[TaskViewModel]
-        end
-        M[(TodoTask model)]
+flowchart TB
+    subgraph V["Views (SwiftUI)"]
+        direction LR
+        LV[LoginView]
+        SV[SignUpView]
+        TLV[TaskListView]
+        TFV[TaskFormView]
     end
-
-    subgraph Firebase["Firebase (Cloud)"]
+    subgraph VM["ViewModels (ObservableObject)"]
+        direction LR
+        AVM[AuthViewModel]
+        TVM["TaskViewModel<br/>uses TodoTask model"]
+    end
+    subgraph FB["Firebase (Cloud)"]
+        direction LR
         AUTH[Firebase Auth]
         FS[(Cloud Firestore)]
     end
-
-    CV --> LV & TLV
-    LV --> SV
-    TLV --> TFV
-    LV & SV & TLV -- actions --> AVM
-    TLV & TFV -- actions --> TVM
-    AVM <--> AUTH
-    TVM <--> FS
-    TVM --- M
+    LV & SV -- "sign up / log in" --> AVM
+    TLV -- "log out" --> AVM
+    TLV & TFV -- "add / edit / delete" --> TVM
+    AVM <-- "email + password" --> AUTH
+    TVM <-- "users/{uid}/tasks" --> FS
 ```
 
 ### Screen flow
