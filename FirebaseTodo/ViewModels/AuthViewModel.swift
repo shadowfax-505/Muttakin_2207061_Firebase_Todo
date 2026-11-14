@@ -53,6 +53,7 @@ class AuthViewModel: ObservableObject {
     func signOut() {
         do {
             try Auth.auth().signOut()
+            user = nil
         } catch {
             errorMessage = error.localizedDescription
         }

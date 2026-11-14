@@ -9,6 +9,7 @@ struct TaskListView: View {
 
     @State private var showAddSheet = false
     @State private var editingTask: TodoTask?
+    @State private var showLogoutConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -41,14 +42,10 @@ struct TaskListView: View {
             .navigationTitle("My Tasks")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Text(email)
-                        Button("Log Out", role: .destructive) {
-                            authVM.signOut()
-                        }
-                    } label: {
-                        Image(systemName: "person.circle")
+                    Button("Log Out") {
+                        showLogoutConfirm = true
                     }
+                    .foregroundColor(.red)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -70,6 +67,13 @@ struct TaskListView: View {
                     updated.description = description
                     taskVM.updateTask(updated)
                 }
+            }
+            .confirmationDialog("Log out of \(email)?", isPresented: $showLogoutConfirm, titleVisibility: .visible) {
+                Button("Log Out", role: .destructive) {
+                    taskVM.stopListening()
+                    authVM.signOut()
+                }
+                Button("Cancel", role: .cancel) {}
             }
             .alert("Error", isPresented: Binding(
                 get: { taskVM.errorMessage != nil },
