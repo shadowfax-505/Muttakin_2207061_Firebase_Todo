@@ -31,10 +31,24 @@ struct LoginView: View {
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10)
 
+                Button("Forgot password?") {
+                    Task { await authVM.resetPassword(email: email) }
+                }
+                .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .disabled(authVM.isLoading)
+
                 if let error = authVM.errorMessage {
                     Text(error)
                         .font(.footnote)
                         .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                }
+
+                if let info = authVM.infoMessage {
+                    Text(info)
+                        .font(.footnote)
+                        .foregroundColor(.green)
                         .multilineTextAlignment(.center)
                 }
 
@@ -60,7 +74,10 @@ struct LoginView: View {
             }
             .padding()
             .padding(.top, 40)
-            .onAppear { authVM.errorMessage = nil }
+            .onAppear {
+                authVM.errorMessage = nil
+                authVM.infoMessage = nil
+            }
         }
     }
 }

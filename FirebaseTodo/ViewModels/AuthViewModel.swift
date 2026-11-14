@@ -5,6 +5,7 @@ import FirebaseAuth
 class AuthViewModel: ObservableObject {
     @Published var user: User?
     @Published var errorMessage: String?
+    @Published var infoMessage: String?
     @Published var isLoading = false
 
     private var handle: AuthStateDidChangeListenerHandle?
@@ -23,6 +24,7 @@ class AuthViewModel: ObservableObject {
     }
 
     func signIn(email: String, password: String) async {
+        infoMessage = nil
         guard validate(email: email, password: password) else { return }
         isLoading = true
         errorMessage = nil
@@ -46,6 +48,24 @@ class AuthViewModel: ObservableObject {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             user = result.user
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoading = false
+    }
+
+    func resetPassword(email: String) async {
+        let trimmed = email.trimmingCharacters(in: .whitespaces)
+        infoMessage = nil
+        guard !trimmed.isEmpty else {
+            errorMessage = "Enter your email first."
+            return
+        }
+        isLoading = true
+        errorMessage = nil
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: trimmed)
+            infoMessage = "Password reset email sent to \(trimmed)."
         } catch {
             errorMessage = error.localizedDescription
         }
