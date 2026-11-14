@@ -32,7 +32,7 @@ class AuthViewModel: ObservableObject {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
             user = result.user
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = loginErrorMessage(error)
         }
         isLoading = false
     }
@@ -78,6 +78,20 @@ class AuthViewModel: ObservableObject {
             user = nil
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func loginErrorMessage(_ error: Error) -> String {
+        let code = AuthErrorCode(rawValue: (error as NSError).code)
+        switch code {
+        case .wrongPassword, .invalidCredential, .userNotFound:
+            return "Wrong email or password."
+        case .invalidEmail:
+            return "Please enter a valid email address."
+        case .networkError:
+            return "No internet connection. Please try again."
+        default:
+            return error.localizedDescription
         }
     }
 
